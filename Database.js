@@ -281,6 +281,11 @@ class Database {
             this.databaseUUID +
             "/rows/?table_name=" +
             table_name,
+          // &order_by={orderID}
+          // &direction={asc/desc}
+          // &start=1 //从第二个元素开始，默认0是从第一个开始
+          // &limit=2 //每次返回的个数
+
           msg
         )
           .then((response) => response.json())
@@ -294,6 +299,42 @@ class Database {
     });
   }
   // 从这里开始继续写方法
+  async deleteOneRow(table_name, rowID) {
+    return new Promise((resolve, reject) => {
+      if (
+        this.databaseAccessToken &&
+        this.databaseServerAddr &&
+        this.databaseUUID &&
+        table_name &&
+        rowID
+      ) {
+        const msg = {
+          method: "DELETE",
+          headers: {
+            accept: "application/json",
+            "content-type": "application/json",
+            authorization: "Bearer " + this.databaseAccessToken,
+          },
+          body: JSON.stringify({ table_name: table_name, row_id: rowID }),
+        };
+
+        fetch(
+          this.databaseServerAddr +
+            "api/v1/dtables/" +
+            this.databaseUUID +
+            "/rows/",
+          msg
+        )
+          .then((response) => response.json())
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((err) => console.error(err));
+      } else {
+        reject(new Error("deleteOneRow函数错误."));
+      }
+    });
+  }
 }
 // 类定义到这里结束
 
