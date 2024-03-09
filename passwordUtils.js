@@ -1,18 +1,21 @@
-const crypto = require('crypto');
+const crypto = require("crypto");
 
 // 生成盐值
 function generateSalt(length) {
-  return crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length);
+  return crypto
+    .randomBytes(Math.ceil(length / 2))
+    .toString("hex")
+    .slice(0, length);
 }
 
 // 生成加盐哈希
 function hashPassword(password, salt) {
-  var hash = crypto.createHmac('sha512', salt); // 使用SHA-512
+  var hash = crypto.createHmac("sha512", salt); // 使用SHA-512
   hash.update(password);
-  var value = hash.digest('hex');
+  var value = hash.digest("hex");
   return {
     salt: salt,
-    passwordHash: value
+    passwordHash: value,
   };
 }
 
@@ -22,10 +25,10 @@ function saltHashPassword(userpassword) {
   var salt = generateSalt(16); // 给定盐值长度
   var passwordData = hashPassword(userpassword, salt);
   return {
-    UserPassword:userpassword,
-    Salt:passwordData.salt,
-    PasswordHash:passwordData.passwordHash
-  }
+    UserPassword: userpassword,
+    Salt: passwordData.salt,
+    PasswordHash: passwordData.passwordHash,
+  };
 }
 
 // 产生哈希串
@@ -39,12 +42,9 @@ function saltHashPassword(userpassword) {
 //   PasswordHash: '8aac48d7b2e8b5c69e5dc86c620d149c60c7049ed88a67d9d847037f62534fbd7c925ea61c43e660a3b34a4769c4dae174dc632aaae9f5e0241cd852dc8fcf48'
 // }
 
-
-
 // 验证哈希串
-let UserPassword= 'myP@ssw0rd'
-let Salt='450b9a2391c0ece3'
+let UserPassword = "myP@ssw0rd";
+let Salt = "450b9a2391c0ece3";
 console.log(hashPassword(UserPassword, Salt));
-// 对比数据库里的 
+// 对比数据库里的
 // PasswordHash='8aac48d7b2e8b5c69e5dc86c620d149c60c7049ed88a67d9d847037f62534fbd7c925ea61c43e660a3b34a4769c4dae174dc632aaae9f5e0241cd852dc8fcf48'
-
